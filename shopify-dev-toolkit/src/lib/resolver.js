@@ -3,6 +3,8 @@
 // The storefront only exposes the instance key, which can be renamed freely in the theme editor.
 
 const API_VERSION = '2025-01';
+// Optional host permissions, granted from the settings page ("Enable theme access").
+export const THEME_ACCESS = { origins: ['https://*.myshopify.com/*', 'https://admin.shopify.com/*'] };
 const LIST_TTL = 5 * 60 * 1000;
 
 async function getToken(shop) {
@@ -14,6 +16,7 @@ async function getToken(shop) {
 async function adminGet(shop, path) {
   const token = await getToken(shop);
   const fail = (code, message) => Object.assign(new Error(message), { code });
+  if (!(await chrome.permissions.contains(THEME_ACCESS))) throw fail('permission', 'Theme access is off');
   let res;
   try {
     res = token

@@ -140,9 +140,13 @@
     } else {
       badge('guess', 'warn');
       const { code, error } = info.error;
-      if (code === 'auth' || code === 'api' || code === 'network') {
-        const link = Object.assign(document.createElement('a'), { textContent: code === 'auth' ? 'Add Admin API token' : 'Fix in settings' });
-        link.onclick = () => chrome.runtime.sendMessage({ action: 'openOptions' });
+      if (['auth', 'api', 'network', 'permission'].includes(code)) {
+        const labels = { auth: 'Add Admin API token', permission: 'Enable theme access' };
+        const link = Object.assign(document.createElement('a'), { textContent: labels[code] || 'Fix in settings' });
+        link.onclick = () => {
+          resolved.clear(); // retry on next hover once fixed
+          chrome.runtime.sendMessage({ action: 'openOptions', hash: 'theme-access' });
+        };
         sub.append(`${info.key} · ${error} · `, link);
       } else {
         sub.append(`${info.key} · ${error}`);

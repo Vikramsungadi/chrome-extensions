@@ -1,4 +1,4 @@
-# Shopify Dev Toolkit
+# Theme Dev Toolkit for Shopify
 
 Rewrite of "Shortcuts for Shopify" (`okamfjilkpkpcdckebmcglnjpgolccmi`) — market-aware, Polaris-styled, no build step.
 
@@ -16,8 +16,8 @@ Rewrite of "Shortcuts for Shopify" (`okamfjilkpkpcdckebmcglnjpgolccmi`) — mark
 
 **Tools** — section inspector (resolves each section's real type from theme JSON via the Admin API — instance keys renamed in the editor and per-market `*.context.<market>.json` templates are handled; opens the section file or the template JSON at the right line in admin or VS Code / Cursor / Windsurf, focusing the window that has the repo; copy section ID; lock with `L`, `Esc` to exit), hide preview bar, copy debug info, cache-bust reload, QA scan (Liquid errors, missing translations, broken images, missing alt, duplicate IDs), product/collection/cart JSON, clear cart.
 
-## Section types (Admin API)
-The storefront only exposes a section's instance key (e.g. `hero_licensed`), not its type (`splide-slider`). To resolve it, add a per-store Admin API token with `read_themes` in **Settings → Admin API tokens** (e.g. from `admin-token-cli`). Without a token the extension uses your signed-in session on admin.shopify.com; if that fails, the inspector shows the key as a *guess* and disables the file buttons.
+## Section types (theme access)
+The storefront only exposes a section's instance key (e.g. `hero_licensed`), not its type (`splide-slider`). To resolve it, turn on **Settings → Theme access** (an optional permission for `*.myshopify.com` and `admin.shopify.com`). The inspector then reads the theme's JSON through your signed-in admin session, or through a per-store Admin API token with `read_themes` if you add one. Without access, it shows the key as a *guess* and disables the file buttons.
 
 ## Shortcuts
 | Command | macOS | Windows / Linux |
@@ -33,6 +33,12 @@ The storefront only exposes a section's instance key (e.g. `hero_licensed`), not
 
 Chrome allows at most 4 default shortcuts per extension; set the rest at `chrome://extensions/shortcuts`.
 Defaults only apply on a fresh install. An existing install keeps whatever is already assigned.
+
+## Publishing
+```bash
+./package.sh        # -> dist/theme-dev-toolkit-<version>.zip (manifest, icons, src only)
+```
+Upload the zip in the [Chrome Web Store dashboard](https://chrome.google.com/webstore/devconsole). All form text (description, single purpose, permission justifications, data disclosures) is in [store/LISTING.md](store/LISTING.md); screenshots and promo tile are in `store/`; the privacy policy is [PRIVACY.md](PRIVACY.md) and must be linked from a public URL. Bump `version` in `manifest.json` for every upload.
 
 ## Layout
 ```

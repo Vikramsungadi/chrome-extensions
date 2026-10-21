@@ -52,7 +52,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // External protocol (vscode://, cursor://) must be opened from a tab update, not window.open.
     openExternal: () => chrome.tabs.update(sender.tab.id, { url: request.url }),
     openTab: () => chrome.tabs.create({ url: request.url, index: sender.tab.index + 1, openerTabId: sender.tab.id }),
-    openOptions: () => chrome.runtime.openOptionsPage(),
+    openOptions: () => request.hash
+      ? chrome.tabs.create({ url: chrome.runtime.getURL(`src/options/options.html#${request.hash}`) })
+      : chrome.runtime.openOptionsPage(),
     resolveSection: () => resolveSection(request),
     openInEditor: () => openInEditor(sender.tab.id, request),
     inspectorClosed: () => chrome.action.setBadgeText({ tabId: sender.tab.id, text: '' })

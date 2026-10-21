@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shopify Dev Toolkit · Settings</title>
+  <title>Theme Dev Toolkit · Settings</title>
   <link rel="stylesheet" href="../popup/polaris.css">
   <style>
     body { padding: 32px 16px 64px; }
@@ -59,6 +59,16 @@
         <button class="btn" id="add-repo">Add repo</button>
       </div>
       <div class="rows" id="repos"></div>
+    </div>
+
+    <div class="card stack" id="theme-access">
+      <div class="inline between" style="flex-wrap:nowrap; --gap:16px">
+        <div>
+          <h2 class="heading-md">Theme access <span class="badge" id="access-badge"></span></h2>
+          <p class="subdued small">Lets the section inspector read your theme's JSON templates (through your signed-in admin session or an Admin API token) to show each section's real file. Only requested Shopify domains are accessed: <span class="mono">*.myshopify.com</span> and <span class="mono">admin.shopify.com</span>.</p>
+        </div>
+        <button class="btn primary" id="access-btn">Enable</button>
+      </div>
     </div>
 
     <div class="card stack">

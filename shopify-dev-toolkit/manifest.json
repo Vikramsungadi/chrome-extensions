@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Shopify Dev Toolkit",
-  "version": "2.1.0",
-  "description": "Market-aware shortcuts for Shopify theme work: preview links + QR, theme editor, admin, market switcher, section inspector and QA utils.",
+  "name": "Theme Dev Toolkit for Shopify",
+  "short_name": "Theme Dev Toolkit",
+  "version": "2.2.0",
+  "description": "Shortcuts for Shopify theme developers: preview links with QR, theme editor, admin, markets, section inspector and QA tools.",
   "minimum_chrome_version": "116",
   "action": {
     "default_popup": "src/popup/popup.html",
@@ -75,7 +76,7 @@
       "description": "Copy store + theme + market debug info"
     }
   },
-  "host_permissions": [
+  "optional_host_permissions": [
     "https://*.myshopify.com/*",
     "https://admin.shopify.com/*"
   ]

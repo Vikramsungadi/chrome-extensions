@@ -1,4 +1,5 @@
 import { EDITORS, getSettings, saveSettings } from '../lib/storage.js';
+import { THEME_ACCESS } from '../lib/resolver.js';
 
 const $ = sel => document.querySelector(sel);
 
@@ -95,7 +96,27 @@ function status(text, isError = false) {
   if (!isError) setTimeout(() => ($('#status').textContent = ''), 2000);
 }
 
+let accessGranted = false;
+
+async function renderAccess() {
+  accessGranted = await chrome.permissions.contains(THEME_ACCESS);
+  Object.assign($('#access-badge'), { textContent: accessGranted ? 'On' : 'Off', className: `badge ${accessGranted ? 'success' : ''}` });
+  Object.assign($('#access-btn'), { textContent: accessGranted ? 'Turn off' : 'Enable', className: accessGranted ? 'btn' : 'btn primary' });
+}
+
+async function toggleAccess() {
+  // permissions.request must be the first await in the click handler, or Chrome drops the user gesture.
+  if (accessGranted) await chrome.permissions.remove(THEME_ACCESS);
+  else await chrome.permissions.request(THEME_ACCESS);
+  await chrome.storage.session.clear();
+  renderAccess();
+}
+
 async function init() {
+  $('#access-btn').onclick = toggleAccess;
+  renderAccess();
+  if (location.hash) document.querySelector(location.hash)?.scrollIntoView({ block: 'center' });
+
   const settings = await getSettings();
   $('#editor').append(...Object.entries(EDITORS).map(([value, { label }]) => new Option(label, value, false, value === settings.editor)));
   $('#always-preview').checked = settings.alwaysAddPreviewParam;
