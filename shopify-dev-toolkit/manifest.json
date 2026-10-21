@@ -1,0 +1,82 @@
+{
+  "manifest_version": 3,
+  "name": "Shopify Dev Toolkit",
+  "version": "2.1.0",
+  "description": "Market-aware shortcuts for Shopify theme work: preview links + QR, theme editor, admin, market switcher, section inspector and QA utils.",
+  "minimum_chrome_version": "116",
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-disabled16.png",
+      "32": "icons/icon-disabled32.png",
+      "48": "icons/icon-disabled48.png",
+      "128": "icons/icon-disabled128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "options_page": "src/options/options.html",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "declarativeContent"
+  ],
+  "commands": {
+    "_execute_action": {
+      "description": "Open the toolkit popup"
+    },
+    "copy-preview-link": {
+      "description": "Copy preview link",
+      "suggested_key": {
+        "default": "Ctrl+Shift+Q",
+        "mac": "Ctrl+Shift+Q"
+      }
+    },
+    "open-theme-editor": {
+      "description": "Open theme editor on this page",
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "mac": "Ctrl+Shift+E"
+      }
+    },
+    "open-admin": {
+      "description": "Open admin for this resource",
+      "suggested_key": {
+        "default": "Alt+A",
+        "mac": "Ctrl+Shift+A"
+      }
+    },
+    "toggle-section-highlighter": {
+      "description": "Toggle section inspector",
+      "suggested_key": {
+        "default": "Ctrl+Shift+H",
+        "mac": "Command+Shift+H"
+      }
+    },
+    "copy-market-links": {
+      "description": "Copy preview links for every market"
+    },
+    "open-code-editor": {
+      "description": "Open theme code editor"
+    },
+    "toggle-preview-bar": {
+      "description": "Hide / show Shopify preview bar"
+    },
+    "copy-debug-info": {
+      "description": "Copy store + theme + market debug info"
+    }
+  },
+  "host_permissions": [
+    "https://*.myshopify.com/*",
+    "https://admin.shopify.com/*"
+  ]
+}

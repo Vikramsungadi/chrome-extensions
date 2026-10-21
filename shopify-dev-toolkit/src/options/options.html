@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopify Dev Toolkit · Settings</title>
+  <link rel="stylesheet" href="../popup/polaris.css">
+  <style>
+    body { padding: 32px 16px 64px; }
+    .page { max-width: 720px; margin: 0 auto; }
+    .page > header { margin-bottom: 20px; }
+    .row { display: grid; grid-template-columns: 1fr 1.6fr 1fr auto; gap: 8px; align-items: end; }
+    .row.repo { grid-template-columns: 1fr 2fr auto; }
+    .rows { display: flex; flex-direction: column; gap: 8px; }
+    .rows:empty::after { content: "Nothing yet."; color: var(--p-text-secondary); font-size: 12px; }
+    @media (max-width: 560px) { .row, .row.repo { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="page stack" style="--gap:16px">
+    <header>
+      <h1 class="heading-lg" style="font-size:20px; line-height:28px">Settings</h1>
+      <p class="subdued">Settings sync through your Chrome profile.</p>
+    </header>
+
+    <div class="card stack">
+      <div>
+        <h2 class="heading-md">General</h2>
+      </div>
+      <div>
+        <label class="label" for="editor">Local editor</label>
+        <select id="editor" class="select" style="max-width:240px"></select>
+        <p class="help">Used by the section inspector's “Local” button.</p>
+      </div>
+      <label class="checkbox">
+        <input type="checkbox" id="always-preview">
+        <span>Always add <span class="mono">preview_theme_id</span>, even for the live theme
+          <span class="help" style="display:block">Off: live-theme links stay clean.</span></span>
+      </label>
+    </div>
+
+    <div class="card stack">
+      <div class="inline between">
+        <div>
+          <h2 class="heading-md">Linked stores</h2>
+          <p class="subdued small">For setups with a separate Shopify store per region (e.g. India, UAE, US). The popup opens the same page on each one.</p>
+        </div>
+        <button class="btn" id="add-store">Add store</button>
+      </div>
+      <div class="rows" id="stores"></div>
+    </div>
+
+    <div class="card stack">
+      <div class="inline between">
+        <div>
+          <h2 class="heading-md">Local repositories</h2>
+          <p class="subdued small">Theme repo path per store, keyed by myshopify domain.</p>
+        </div>
+        <button class="btn" id="add-repo">Add repo</button>
+      </div>
+      <div class="rows" id="repos"></div>
+    </div>
+
+    <div class="card stack">
+      <div class="inline between">
+        <div>
+          <h2 class="heading-md">Admin API tokens</h2>
+          <p class="subdued small">Optional. Lets the section inspector read theme JSON to find each section's real type. Needs the <span class="mono">read_themes</span> scope. Without a token it tries your signed-in admin session. Stored on this machine only, not synced.</p>
+        </div>
+        <button class="btn" id="add-token">Add token</button>
+      </div>
+      <div class="rows" id="tokens"></div>
+    </div>
+
+    <div class="inline" style="justify-content:flex-end">
+      <span class="subdued small" id="status"></span>
+      <button class="btn primary lg" id="save">Save</button>
+    </div>
+  </div>
+  <script type="module" src="options.js"></script>
+</body>
+</html>

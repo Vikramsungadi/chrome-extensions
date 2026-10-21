@@ -1,0 +1,67 @@
+body { width: 360px; min-height: 240px; }
+body:focus, body:focus-visible { outline: none; }
+
+/* Admin-style top bar */
+.topbar { display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px 0 16px; margin-bottom: 12px; background: #1a1a1a; color: #fff; }
+.theme-title { min-width: 0; font-weight: 650; font-size: 14px; }
+.topbar .badge { flex: none; }
+.topbar .spacer { flex: 1; }
+
+/* Tabs */
+.tabs { padding: 0 12px 8px; gap: 2px; }
+.tab { padding: 4px 10px; font-size: 13px; }
+.count { display: inline-block; min-width: 18px; margin-left: 4px; padding: 0 5px; border-radius: 9999px; background: rgba(0,0,0,.08); font-size: 11px; line-height: 18px; text-align: center; }
+.count:empty { display: none; }
+
+main { padding: 0 12px 12px; }
+.panel { display: flex; flex-direction: column; gap: 12px; }
+
+.card-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 10px 14px; }
+.card-header + .action-list { padding-top: 0; }
+
+/* Preview */
+.qr-card { display: flex; gap: 16px; align-items: center; padding: 12px; }
+.qr { width: 120px; height: 120px; flex: none; padding: 4px; border-radius: var(--p-radius-200); background: #fff; box-shadow: 0 0 0 1px var(--p-border) inset; }
+.qr svg { display: block; width: 100%; height: 100%; }
+.qr-controls { display: flex; flex-direction: column; justify-content: space-between; gap: 16px; min-width: 0; flex: 1; align-self: stretch; padding: 4px 0; }
+.qr-controls .reset { padding: 0; min-height: 0; }
+
+/* Info */
+.details { margin: 0; padding: 6px 14px; display: grid; grid-template-columns: auto 1fr; column-gap: 0; }
+.details dt { padding-right: 16px !important; }
+.details dt, .details dd { padding: 7px 0; border-top: 1px solid var(--p-border); }
+.details dt:first-of-type, .details dd:first-of-type { border-top: 0; }
+.details dt { color: var(--p-text-secondary); }
+.details dd { margin: 0; min-width: 0; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: copy; }
+.details dd:hover { color: var(--p-link); }
+
+/* Admin */
+.search { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 4px 0 10px; border-radius: var(--p-radius-300); background: var(--p-surface); box-shadow: var(--p-shadow-card); color: var(--p-text-secondary); }
+.search:focus-within { outline: 2px solid var(--p-focus); outline-offset: 1px; }
+.search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: 400 13px/20px var(--p-font); color: var(--p-text); }
+.search select { border: 0; outline: 0; padding: 4px 6px; border-radius: var(--p-radius-200); background: var(--p-surface-secondary); font: 550 12px/16px var(--p-font); color: var(--p-text); cursor: pointer; }
+
+.nav { list-style: none; margin: 0; padding: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.nav li { position: relative; }
+.nav .action { padding-right: 32px; }
+.nav .add { position: absolute; right: 2px; top: 2px; opacity: 0; }
+.nav li:hover .add, .nav .add:focus-visible { opacity: 1; }
+.nav .group-label { grid-column: 1 / -1; padding: 8px 8px 2px; font-size: 12px; font-weight: 550; color: var(--p-text-secondary); }
+.nav .group-label:first-child { padding-top: 2px; }
+
+/* Markets */
+.markets .flag { width: 20px; flex: none; font-size: 16px; line-height: 20px; text-align: center; }
+.markets li { position: relative; }
+.markets .row-actions { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); display: none; gap: 2px; background: var(--p-surface-hover); padding-left: 8px; }
+.markets li:hover .row-actions { display: flex; }
+.markets .row-actions .icon-btn { width: 26px; height: 26px; }
+.markets .row-actions .icon { width: 18px; height: 18px; }
+.switcher { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; }
+
+/* Empty / loading */
+.empty { display: grid; place-items: center; min-height: 200px; padding: 24px 16px; }
+.empty-icon { display: inline-grid; place-items: center; margin: 0 auto 4px; color: var(--p-text-secondary); }
+.empty-icon .icon { width: 28px; height: 28px; }
+.spinner { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #e3e3e3; border-top-color: #303030; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.icon-btn.dark.active { background: rgba(255,255,255,.16); color: #fff; }

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Shopify Dev Toolkit</title>
+  <link rel="stylesheet" href="polaris.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body tabindex="-1">
+  <!-- Top bar (admin-style): theme name + status only -->
+  <header class="topbar">
+    <span class="theme-title truncate" id="theme-name">Shopify Dev Toolkit</span>
+    <span class="badge" id="theme-role" hidden></span>
+    <span class="spacer"></span>
+    <button class="icon-btn dark" data-action="info" id="info-btn" title="Store &amp; theme details" aria-label="Details" data-icon="info" hidden></button>
+    <button class="icon-btn dark" data-action="options" title="Settings" aria-label="Settings" data-icon="settings"></button>
+  </header>
+
+  <div id="loading" class="empty"><span class="spinner"></span></div>
+
+  <div id="empty" class="empty" hidden>
+    <div class="stack" style="--gap:8px; text-align:center; max-width:260px">
+      <span class="empty-icon" data-icon="store"></span>
+      <h2 class="heading-md">No storefront on this tab</h2>
+      <p class="subdued">Open a Shopify store page or theme preview, then click the toolkit again.</p>
+    </div>
+  </div>
+
+  <div id="app" hidden>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="preview" aria-selected="true">Preview</button>
+      <button class="tab" role="tab" data-tab="admin">Admin</button>
+      <button class="tab" role="tab" data-tab="markets">Markets<span class="count" id="markets-count"></span></button>
+      <button class="tab" role="tab" data-tab="tools">Tools</button>
+    </nav>
+
+    <main>
+      <!-- PREVIEW -->
+      <section class="panel" data-panel="preview">
+        <div class="card qr-card">
+          <div class="qr" id="qr" role="img" aria-label="QR code"></div>
+          <div class="qr-controls">
+            <div>
+              <p class="heading-sm">Scan to preview</p>
+              <p class="subdued small" id="qr-caption"></p>
+              <button class="btn plain sm reset" data-action="qr-reset" id="qr-reset" hidden>Back to this page</button>
+            </div>
+            <div class="inline" style="--gap:4px">
+              <button class="btn primary sm" data-action="copy-preview" id="copy-btn"><span data-icon="copy"></span>Copy link</button>
+              <button class="icon-btn" data-action="qr-download" title="Download QR as PNG" data-icon="download"></button>
+              <button class="icon-btn" data-action="qr-copy" title="Copy QR image" data-icon="image"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card flush">
+          <ul class="action-list" id="preview-actions"></ul>
+        </div>
+
+        <div class="card flush">
+          <ul class="nav" id="quick-nav"></ul>
+        </div>
+      </section>
+
+      <!-- INFO (opened from the ⓘ button) -->
+      <section class="panel" data-panel="info" hidden>
+        <div class="card flush">
+          <dl class="details" id="details"></dl>
+        </div>
+        <div class="card flush">
+          <ul class="action-list" id="info-actions"></ul>
+        </div>
+      </section>
+
+      <!-- ADMIN -->
+      <section class="panel" data-panel="admin" hidden>
+        <form class="search" id="admin-search">
+          <span data-icon="search"></span>
+          <input id="admin-query" placeholder="Search orders" autocomplete="off" aria-label="Search admin">
+          <select id="admin-scope" aria-label="Search in">
+            <option value="orders">Orders</option>
+            <option value="products">Products</option>
+            <option value="customers">Customers</option>
+            <option value="collections">Collections</option>
+            <option value="draft_orders">Drafts</option>
+          </select>
+        </form>
+
+        <div class="card flush" id="this-page" hidden>
+          <ul class="action-list" id="this-page-list"></ul>
+        </div>
+
+        <div class="card flush">
+          <ul class="nav" id="admin-nav"></ul>
+        </div>
+      </section>
+
+      <!-- MARKETS -->
+      <section class="panel" data-panel="markets" hidden>
+        <div class="card flush">
+          <div class="card-header">
+            <p class="heading-sm" id="markets-title">Market URLs</p>
+            <button class="btn plain sm" data-action="copy-all-markets">Copy all</button>
+          </div>
+          <ul class="action-list markets" id="market-list"></ul>
+          <p class="card-section subdued small" id="market-empty" hidden>This page has no alternate market URLs. Use the switcher below.</p>
+        </div>
+
+        <div class="card flush" id="linked-card" hidden>
+          <div class="card-header">
+            <p class="heading-sm">Linked stores</p>
+            <button class="btn plain sm" data-action="options">Manage</button>
+          </div>
+          <ul class="action-list markets" id="linked-list"></ul>
+        </div>
+
+        <div class="card">
+          <p class="heading-sm" style="margin-bottom:8px">Switch market</p>
+          <form class="switcher" id="switcher">
+            <input id="switch-country" class="field sm" list="country-options" placeholder="Country" maxlength="2" autocomplete="off" aria-label="Country code">
+            <input id="switch-language" class="field sm" list="language-options" placeholder="Language" autocomplete="off" aria-label="Language code">
+            <button class="btn primary sm" type="submit">Switch</button>
+            <datalist id="country-options"></datalist>
+            <datalist id="language-options"></datalist>
+          </form>
+        </div>
+      </section>
+
+      <!-- TOOLS -->
+      <section class="panel" data-panel="tools" hidden>
+        <div class="card flush">
+          <ul class="action-list" id="tool-actions"></ul>
+        </div>
+
+        <div class="card flush">
+          <div class="card-header">
+            <p class="heading-sm">QA scan</p>
+            <button class="btn sm" data-action="scan" id="scan-btn">Run</button>
+          </div>
+          <ul class="action-list" id="scan-results" hidden></ul>
+        </div>
+
+        <div class="card flush">
+          <ul class="action-list" id="data-actions"></ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
