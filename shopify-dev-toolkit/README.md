@@ -20,13 +20,19 @@ Rewrite of "Shortcuts for Shopify" (`okamfjilkpkpcdckebmcglnjpgolccmi`) — mark
 The storefront only exposes a section's instance key (e.g. `hero_licensed`), not its type (`splide-slider`). To resolve it, add a per-store Admin API token with `read_themes` in **Settings → Admin API tokens** (e.g. from `admin-token-cli`). Without a token the extension uses your signed-in session on admin.shopify.com; if that fails, the inspector shows the key as a *guess* and disables the file buttons.
 
 ## Shortcuts
-| Command | Default |
-|---|---|
-| Copy preview link | ⌃⇧Q |
-| Open theme editor | ⌃⇧E |
-| Open admin | ⌃⇧A (mac) / Alt+A |
-| Toggle section inspector | ⌘⇧H (mac) / Ctrl+Shift+H |
-| Copy market links, open code editor, toggle preview bar, copy debug info | unassigned — set at `chrome://extensions/shortcuts` |
+| Command | macOS | Windows / Linux |
+|---|---|---|
+| Copy preview link | ⌃C | Ctrl+Shift+Q |
+| Open theme editor | ⌃E | Ctrl+Shift+E |
+| Open admin | ⌃A | Alt+A |
+| Toggle section inspector | ⌃I | Ctrl+Shift+H |
+| Toggle preview bar | — (suggested ⌃H) | — |
+| Open code editor | — (suggested ⌃⇧E) | — |
+| Open popup | — (suggested ⌃⇧S) | — |
+| Copy market links, copy debug info | — | — |
+
+Chrome allows at most 4 default shortcuts per extension; set the rest at `chrome://extensions/shortcuts`.
+Defaults only apply on a fresh install. An existing install keeps whatever is already assigned.
 
 ## Layout
 ```

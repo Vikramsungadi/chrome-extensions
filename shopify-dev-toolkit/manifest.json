@@ -38,28 +38,28 @@
       "description": "Copy preview link",
       "suggested_key": {
         "default": "Ctrl+Shift+Q",
-        "mac": "Ctrl+Shift+Q"
+        "mac": "MacCtrl+C"
       }
     },
     "open-theme-editor": {
       "description": "Open theme editor on this page",
       "suggested_key": {
         "default": "Ctrl+Shift+E",
-        "mac": "Ctrl+Shift+E"
+        "mac": "MacCtrl+E"
       }
     },
     "open-admin": {
       "description": "Open admin for this resource",
       "suggested_key": {
         "default": "Alt+A",
-        "mac": "Ctrl+Shift+A"
+        "mac": "MacCtrl+A"
       }
     },
     "toggle-section-highlighter": {
       "description": "Toggle section inspector",
       "suggested_key": {
         "default": "Ctrl+Shift+H",
-        "mac": "Command+Shift+H"
+        "mac": "MacCtrl+I"
       }
     },
     "copy-market-links": {
