@@ -30,4 +30,4 @@ Uninstalling the extension deletes everything it stored. You can also delete tok
 
 ## Contact
 
-Questions: **TODO-contact-email**
+Questions: sungadivikram1@gmail.com, or open an issue at https://github.com/Vikramsungadi/chrome-extensions/issues

@@ -71,37 +71,62 @@ export function adminSearchLink(ctx, scope, query) {
   return `${adminUrl(ctx, scope)}?query=${encodeURIComponent(query.replace(/^#/, ''))}`;
 }
 
-/** Admin destinations, grouped like the admin sidebar. `add` is the "create new" path. */
+/**
+ * Admin destinations, grouped like the admin sidebar.
+ * `add` is the "create new" path; `key` is the letter used after the admin shortcut (⌃A then P → Products).
+ */
 export const ADMIN_NAV = [
   { group: 'Sales', items: [
-    { label: 'Orders', icon: 'order', path: 'orders' },
-    { label: 'Drafts', icon: 'draft', path: 'draft_orders', add: 'draft_orders/new' },
-    { label: 'Customers', icon: 'customer', path: 'customers', add: 'customers/new' },
-    { label: 'Discounts', icon: 'discount', path: 'discounts' }
+    { label: 'Orders', icon: 'order', path: 'orders', key: 'o', add: 'draft_orders/new' },
+    { label: 'Drafts', icon: 'draft', path: 'draft_orders', key: 'r', add: 'draft_orders/new' },
+    { label: 'Customers', icon: 'customer', path: 'customers', key: 'u', add: 'customers/new' },
+    { label: 'Discounts', icon: 'discount', path: 'discounts', key: 'd' }
   ] },
   { group: 'Catalog', items: [
-    { label: 'Products', icon: 'product', path: 'products', add: 'products/new' },
-    { label: 'Collections', icon: 'collection', path: 'collections', add: 'collections/new' },
-    { label: 'Inventory', icon: 'inventory', path: 'products/inventory' },
+    { label: 'Products', icon: 'product', path: 'products', key: 'p', add: 'products/new' },
+    { label: 'Collections', icon: 'collection', path: 'collections', key: 'c', add: 'collections/new' },
+    { label: 'Inventory', icon: 'inventory', path: 'products/inventory', key: 'i' },
     { label: 'Gift cards', icon: 'giftcard', path: 'gift_cards' }
   ] },
   { group: 'Content', items: [
-    { label: 'Metaobjects', icon: 'metaobject', path: 'content/metaobjects' },
-    { label: 'Files', icon: 'file', path: 'content/files' },
-    { label: 'Menus', icon: 'menu', path: 'content/menus' },
-    { label: 'Blog posts', icon: 'blog', path: 'content/articles' },
-    { label: 'Pages', icon: 'page', path: 'pages', add: 'pages/new' }
+    { label: 'Content', icon: 'metaobject', path: 'content/metaobjects', key: 'f' },
+    { label: 'Files', icon: 'file', path: 'content/files', key: 'l' },
+    { label: 'Menus', icon: 'menu', path: 'content/menus', key: 'n' },
+    { label: 'Blog posts', icon: 'blog', path: 'content/articles', key: 'b', add: 'content/articles/new' },
+    { label: 'Pages', icon: 'page', path: 'pages', key: 'w', add: 'pages/new' }
   ] },
   { group: 'Store', items: [
-    { label: 'Home', icon: 'home', path: '' },
-    { label: 'Themes', icon: 'theme', path: 'themes' },
-    { label: 'Markets', icon: 'markets', path: 'markets' },
+    { label: 'Home', icon: 'home', path: '', key: 'h' },
+    { label: 'Themes', icon: 'theme', path: 'themes', key: 't' },
+    { label: 'Markets', icon: 'markets', path: 'markets', key: 'g' },
+    { label: 'Metafields', icon: 'data', path: 'settings/custom_data', key: 'm' },
     { label: 'Preferences', icon: 'preferences', path: 'online_store/preferences' },
-    { label: 'Analytics', icon: 'analytics', path: 'analytics' },
-    { label: 'Apps', icon: 'apps', path: 'apps' },
-    { label: 'Settings', icon: 'settings', path: 'settings' }
+    { label: 'Analytics', icon: 'analytics', path: 'analytics', key: 'y' },
+    { label: 'Apps', icon: 'apps', path: 'apps', key: 'x' },
+    { label: 'Settings', icon: 'settings', path: 'settings', key: 's' }
   ] }
 ];
+
+/** Store handle from a storefront context or an admin.shopify.com URL. */
+export function storeHandleFrom(ctx, url) {
+  return ctx?.storeHandle || url?.match(/^https:\/\/admin\.shopify\.com\/store\/([^/?#]+)/)?.[1] || null;
+}
+
+/** Everything the ⌃A key menu needs, as plain data (it is handed to a content script). */
+export function adminKeyMenu(handle, ctx) {
+  const base = `${ADMIN}/${handle}`;
+  const url = path => (path ? `${base}/${path}` : base);
+  const items = ADMIN_NAV.flatMap(({ group, items }) => items.filter(i => i.key).map(i => ({
+    key: i.key, label: i.label, group, url: url(i.path), addUrl: i.add ? url(i.add) : null
+  })));
+  if (ctx?.theme?.id) items.push({ key: 'e', label: 'Theme editor', group: 'Store', url: themeEditorLink(ctx), addUrl: null });
+  return {
+    handle,
+    items,
+    // ⌃A twice / Enter / A: the product or collection on screen (storefront only).
+    resource: ctx ? { label: ctx.resourceId ? `This ${ctx.resourceType}` : 'Admin home', url: adminLink(ctx) } : null
+  };
+}
 
 export function resourceJsonLinks(ctx) {
   const links = [{ label: 'cart.js', href: `${ctx.origin}${ctx.routesRoot}cart.js` }];

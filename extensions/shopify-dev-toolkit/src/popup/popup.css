@@ -65,3 +65,8 @@ main { padding: 0 12px 12px; }
 .spinner { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #e3e3e3; border-top-color: #303030; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .icon-btn.dark.active { background: rgba(255,255,255,.16); color: #fff; }
+
+.admin-tip { margin: -4px 4px 0; line-height: 22px; }
+.admin-tip .inline { display: inline-flex; vertical-align: middle; }
+.nav .action .suffix kbd { opacity: .8; }
+.nav li:has(.add):hover .action .suffix { visibility: hidden; }

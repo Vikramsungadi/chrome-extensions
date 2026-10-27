@@ -64,27 +64,6 @@ export function probePage() {
   };
 }
 
-/** Copies text inside the page (used from shortcuts, where the service worker has no clipboard). */
-export async function copyInPage(text, message) {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.cssText = 'position:fixed;opacity:0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    ta.remove();
-  }
-  const host = document.createElement('div');
-  host.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:2147483647;background:#303030;color:#fff;font:500 13px/20px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:8px 14px;border-radius:10px;box-shadow:0 8px 16px -4px rgba(0,0,0,.3);transition:opacity .2s';
-  host.textContent = message;
-  document.documentElement.appendChild(host);
-  setTimeout(() => { host.style.opacity = '0'; setTimeout(() => host.remove(), 250); }, 1800);
-  return true;
-}
-
 /** Small in-page toast. */
 export function toastInPage(message) {
   const host = document.createElement('div');

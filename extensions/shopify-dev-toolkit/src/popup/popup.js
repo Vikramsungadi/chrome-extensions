@@ -6,7 +6,7 @@ import {
 } from '../lib/links.js';
 import { getSettings } from '../lib/storage.js';
 import { qrPng, qrSvg } from '../lib/qr.js';
-import { icon } from '../vendor/polaris-icons.js';
+import { icon } from '../shared/polaris-icons.js';
 
 const $ = sel => document.querySelector(sel);
 
@@ -165,7 +165,10 @@ function showQrFor(href, label) {
 // ---------- admin ----------
 function navRow(item) {
   const { ctx } = state;
-  const row = action({ icon: item.icon, label: item.label, href: adminUrl(ctx, item.path), suffix: el('span') });
+  const row = action({
+    icon: item.icon, label: item.label, href: adminUrl(ctx, item.path),
+    suffix: item.key ? el('kbd', { className: 'k', textContent: item.key.toUpperCase(), title: `Admin shortcut, then ${item.key.toUpperCase()}` }) : el('span')
+  });
   if (item.add) {
     const add = iconButton('plus', `New ${item.label.toLowerCase().replace(/s$/, '')}`, () => openTab(adminUrl(ctx, item.add)));
     add.classList.add('add');
@@ -190,6 +193,11 @@ function renderAdmin() {
     for (const item of links) items.push(navRow(item));
   }
   $('#admin-nav').replaceChildren(...items);
+  const adminShortcut = state.shortcuts['open-admin'];
+  $('#admin-tip').hidden = !adminShortcut;
+  if (adminShortcut) {
+    $('#admin-tip').replaceChildren('Tip: press ', kbd('open-admin'), ' on any store or admin page, then a letter. Add ', el('kbd', { className: 'k', textContent: '⇧' }), ' to create new.');
+  }
 
   const placeholders = { orders: 'Search orders, e.g. #1042', products: 'Search products', customers: 'Search customers', collections: 'Search collections', draft_orders: 'Search draft orders' };
   const scope = $('#admin-scope');

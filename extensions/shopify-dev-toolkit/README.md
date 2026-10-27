@@ -1,10 +1,10 @@
 # Theme Dev Toolkit for Shopify
 
-Rewrite of "Shortcuts for Shopify" (`okamfjilkpkpcdckebmcglnjpgolccmi`) — market-aware, Polaris-styled, no build step.
+Rewrite of "Shortcuts for Shopify" (`okamfjilkpkpcdckebmcglnjpgolccmi`) — market-aware, Polaris-styled, no bundler (build.sh only copies in shared/).
 
 ## Install
 1. `chrome://extensions` → enable **Developer mode**
-2. **Load unpacked** → select this folder
+2. Run `./build.sh shopify-dev-toolkit` from the repo root, then **Load unpacked** → select `dist/shopify-dev-toolkit`
 3. Disable the old "Shortcuts for Shopify" so the keyboard shortcuts don't clash
 
 ## Features
@@ -24,7 +24,7 @@ The storefront only exposes a section's instance key (e.g. `hero_licensed`), not
 |---|---|---|
 | Copy preview link | ⌃C | Ctrl+Shift+Q |
 | Open theme editor | ⌃E | Ctrl+Shift+E |
-| Open admin | ⌃A | Alt+A |
+| Go to admin (key menu, below) | ⌃A | Alt+A |
 | Toggle section inspector | ⌃I | Ctrl+Shift+H |
 | Toggle preview bar | — (suggested ⌃H) | — |
 | Open code editor | — (suggested ⌃⇧E) | — |
@@ -34,9 +34,25 @@ The storefront only exposes a section's instance key (e.g. `hero_licensed`), not
 Chrome allows at most 4 default shortcuts per extension; set the rest at `chrome://extensions/shortcuts`.
 Defaults only apply on a fresh install. An existing install keeps whatever is already assigned.
 
+### Admin key menu
+Press the admin shortcut (⌃A) on a storefront or an admin.shopify.com page, then a letter. You can keep ⌃ held (⌃A then ⌃P). ⇧ + letter opens "new" where it exists. ⌃A twice, Enter or A opens the product or collection on screen. From a storefront it opens a new tab; on an admin page it navigates in place.
+
+| Key | Opens | Key | Opens | Key | Opens |
+|---|---|---|---|---|---|
+| O | Orders | P | Products | H | Home |
+| R | Drafts | C | Collections | T | Themes |
+| U | Customers | I | Inventory | E | Theme editor (this page) |
+| D | Discounts | F | Content (metaobjects) | G | Markets |
+| | | L | Files | M | Metafields & metaobject definitions |
+| | | N | Menus | Y | Analytics |
+| | | B | Blog posts | X | Apps |
+| | | W | Pages | S | Settings |
+
+Letters live on `ADMIN_NAV` in `src/lib/links.js`. The popup's Admin tab shows the same letters.
+
 ## Publishing
 ```bash
-./package.sh        # -> dist/theme-dev-toolkit-<version>.zip (manifest, icons, src only)
+../../build.sh --zip shopify-dev-toolkit   # -> dist/shopify-dev-toolkit-<version>.zip
 ```
 Upload the zip in the [Chrome Web Store dashboard](https://chrome.google.com/webstore/devconsole). All form text (description, single purpose, permission justifications, data disclosures) is in [store/LISTING.md](store/LISTING.md); screenshots and promo tile are in `store/`; the privacy policy is [PRIVACY.md](PRIVACY.md) and must be linked from a public URL. Bump `version` in `manifest.json` for every upload.
 
@@ -50,8 +66,7 @@ src/lib/links.js         URL builders (preview, editor, admin, markets)
 src/lib/qr.js            QR → SVG / PNG
 src/lib/storage.js       synced settings
 src/lib/resolver.js      section key -> type lookup (Admin API, cached per session)
-src/popup/               popup (polaris.css = shared Polaris tokens)
+src/popup/               popup (Polaris tokens + icons come from ../../shared, mounted at src/shared/ by build.sh)
 src/options/             settings: linked stores, repo paths, editor
 src/vendor/qrcode.js     qrcode-generator 1.4.4 (MIT, Kazuhiko Arase)
-src/vendor/polaris-icons.js  subset of @shopify/polaris-icons 9.3.1 (see LICENSE-polaris-icons.md)
 ```

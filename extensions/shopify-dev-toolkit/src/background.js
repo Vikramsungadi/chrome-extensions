@@ -1,11 +1,22 @@
-import { copyInPage, toastInPage, togglePreviewBar } from './lib/page.js';
+import { toastInPage, togglePreviewBar } from './lib/page.js';
 import { getActiveTab, getContext, runInTab, toggleInspector } from './lib/tab.js';
-import { adminLink, codeEditorLink, debugInfo, marketLinks, previewLink, themeEditorLink } from './lib/links.js';
+import { adminKeyMenu, codeEditorLink, debugInfo, marketLinks, previewLink, storeHandleFrom, themeEditorLink } from './lib/links.js';
 import { EDITORS, getSettings } from './lib/storage.js';
 import { resolveSection } from './lib/resolver.js';
 
 const toast = (tabId, message) => runInTab(tabId, toastInPage, [message]).catch(() => {});
-const copy = (tabId, text, message) => runInTab(tabId, copyInPage, [text, message]);
+const OFFSCREEN = 'src/offscreen/offscreen.html';
+
+/** Copies via the offscreen document, then confirms on the page only if the copy really happened. */
+async function copy(tabId, text, message) {
+  const [existing] = await chrome.runtime.getContexts({ contextTypes: ['OFFSCREEN_DOCUMENT'] });
+  if (!existing) {
+    await chrome.offscreen.createDocument({ url: OFFSCREEN, reasons: ['CLIPBOARD'], justification: 'Copy links from keyboard shortcuts' })
+      .catch(error => { if (!String(error).includes('Only a single offscreen')) throw error; });
+  }
+  const res = await chrome.runtime.sendMessage({ target: 'offscreen', action: 'copy', text });
+  await toast(tabId, res?.ok ? message : 'Copy failed. Try the popup\'s Copy button');
+}
 const open = (tab, url) => chrome.tabs.create({ url, index: tab.index + 1, openerTabId: tab.id });
 
 const COMMANDS = {
@@ -14,7 +25,6 @@ const COMMANDS = {
     await copy(tab.id, previewLink(ctx, alwaysAddPreviewParam), 'Preview link copied');
   },
   'open-theme-editor': (tab, ctx) => open(tab, themeEditorLink(ctx)),
-  'open-admin': (tab, ctx) => open(tab, adminLink(ctx)),
   'open-code-editor': (tab, ctx) => open(tab, codeEditorLink(ctx)),
   async 'toggle-section-highlighter'(tab, ctx) {
     const on = await toggleInspector(tab.id, ctx);
@@ -33,16 +43,44 @@ const COMMANDS = {
   'copy-debug-info': (tab, ctx) => copy(tab.id, debugInfo(ctx), 'Debug info copied')
 };
 
+/** ⌃A: shows the admin key menu (works on storefronts and on admin.shopify.com). */
+async function showAdminKeys(tab) {
+  const ctx = /^https:\/\/admin\.shopify\.com\//.test(tab.url || '') ? null : await getContext(tab.id);
+  const handle = storeHandleFrom(ctx, tab.url);
+  if (!handle) return toast(tab.id, 'Open a Shopify store or its admin first');
+  await runInTab(tab.id, menu => { window.__sdtAdminKeys = menu; }, [adminKeyMenu(handle, ctx)], 'ISOLATED');
+  await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['src/admin-keys.js'] });
+}
+
+/** The same shortcuts on admin.shopify.com pages. */
+async function ADMIN_COMMANDS(command, tab, handle) {
+  const themes = `https://admin.shopify.com/store/${handle}/themes`;
+  if (command === 'copy-preview-link') return copy(tab.id, tab.url, 'Admin link copied');
+  if (command === 'open-theme-editor' || command === 'open-code-editor') return open(tab, themes);
+  if (command === 'copy-debug-info') return copy(tab.id, `Store:  ${handle}\nURL:    ${tab.url}\nBrowser: ${navigator.userAgent}`, 'Debug info copied');
+  return toast(tab.id, 'Theme Dev Toolkit: open a store page (storefront) for this shortcut');
+}
+
 chrome.commands.onCommand.addListener(async (command, tab) => {
   tab ??= await getActiveTab();
-  if (!tab?.id || !COMMANDS[command]) return;
-  const ctx = await getContext(tab.id);
-  if (!ctx) return toast(tab.id, 'Not a Shopify storefront');
+  if (!tab?.id) return;
+  if (command === 'open-admin') {
+    return showAdminKeys(tab).catch(error => {
+      console.error('Admin keys failed', error);
+      toast(tab.id, `Admin shortcut failed: ${error.message}`);
+    });
+  }
+  if (!COMMANDS[command]) return;
   try {
+    // Admin pages have no storefront context; give the shortcuts an admin meaning where one exists.
+    const adminHandle = storeHandleFrom(null, tab.url);
+    if (adminHandle) return await ADMIN_COMMANDS(command, tab, adminHandle);
+    const ctx = await getContext(tab.id);
+    if (!ctx) return toast(tab.id, 'Theme Dev Toolkit: this page isn\'t a Shopify store');
     await COMMANDS[command](tab, ctx);
   } catch (error) {
     console.error(`Command ${command} failed`, error);
-    await toast(tab.id, 'Something went wrong — see extension console');
+    await toast(tab.id, `${command} failed: ${error.message}`);
   }
 });
 
@@ -52,6 +90,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // External protocol (vscode://, cursor://) must be opened from a tab update, not window.open.
     openExternal: () => chrome.tabs.update(sender.tab.id, { url: request.url }),
     openTab: () => chrome.tabs.create({ url: request.url, index: sender.tab.index + 1, openerTabId: sender.tab.id }),
+    navigate: () => chrome.tabs.update(sender.tab.id, { url: request.url }),
     openOptions: () => request.hash
       ? chrome.tabs.create({ url: chrome.runtime.getURL(`src/options/options.html#${request.hash}`) })
       : chrome.runtime.openOptionsPage(),
