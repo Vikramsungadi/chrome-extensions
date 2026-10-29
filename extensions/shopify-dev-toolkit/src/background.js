@@ -3,6 +3,7 @@ import { getActiveTab, getContext, runInTab, toggleInspector } from './lib/tab.j
 import { adminKeyMenu, codeEditorLink, debugInfo, marketLinks, previewLink, storeHandleFrom, themeEditorLink } from './lib/links.js';
 import { EDITORS, getSettings } from './lib/storage.js';
 import { resolveSection } from './lib/resolver.js';
+import { canPersistPreviewBar, rememberPreviewBar, syncPreviewBarScript } from './lib/preview-bar.js';
 
 const toast = (tabId, message) => runInTab(tabId, toastInPage, [message]).catch(() => {});
 const OFFSCREEN = 'src/offscreen/offscreen.html';
@@ -36,9 +37,13 @@ const COMMANDS = {
     const text = links.map(m => `${m.hreflang}\t${m.href}`).join('\n');
     await copy(tab.id, text, `Copied ${links.length} market links`);
   },
-  async 'toggle-preview-bar'(tab) {
+  async 'toggle-preview-bar'(tab, ctx) {
     const hidden = await runInTab(tab.id, togglePreviewBar);
-    await toast(tab.id, hidden ? 'Preview bar hidden' : 'Preview bar shown');
+    await rememberPreviewBar(ctx.url, hidden);
+    if (!hidden) return toast(tab.id, 'Preview bar shown');
+    await toast(tab.id, await canPersistPreviewBar(ctx.url)
+      ? 'Preview bar hidden on every reload'
+      : 'Preview bar hidden. Hide it once from the popup to keep it hidden on reload');
   },
   'copy-debug-info': (tab, ctx) => copy(tab.id, debugInfo(ctx), 'Debug info copied')
 };
@@ -140,4 +145,11 @@ async function loadImageData(path) {
   return ctx.getImageData(0, 0, bitmap.width, bitmap.height);
 }
 
-chrome.runtime.onInstalled.addListener(registerIconRules);
+chrome.runtime.onInstalled.addListener(() => { registerIconRules(); syncPreviewBarScript(); });
+
+// Keep the preview-bar content script in step with the saved stores and granted host access.
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.previewBarHiddenOrigins) syncPreviewBarScript();
+});
+chrome.permissions.onAdded.addListener(syncPreviewBarScript);
+chrome.permissions.onRemoved.addListener(syncPreviewBarScript);

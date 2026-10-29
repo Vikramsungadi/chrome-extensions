@@ -5,6 +5,7 @@ import {
   isLiveTheme, languageName, linkedStoreLink, liveLink, marketLinks, previewLink, resourceJsonLinks, themeEditorLink
 } from '../lib/links.js';
 import { getSettings } from '../lib/storage.js';
+import { originPattern, rememberPreviewBar } from '../lib/preview-bar.js';
 import { qrPng, qrSvg } from '../lib/qr.js';
 import { icon } from '../shared/polaris-icons.js';
 
@@ -293,9 +294,15 @@ function renderTools() {
     action({
       icon: 'hide', label: ctx.previewBarHidden ? 'Show preview bar' : 'Hide preview bar', command: 'toggle-preview-bar',
       onClick: async () => {
-        ctx.previewBarHidden = await runInTab(state.tab.id, togglePreviewBar);
+        const hide = !ctx.previewBarHidden;
+        // Started before the permission prompt, which can close the popup. The background picks up the saved store.
+        const toggled = runInTab(state.tab.id, togglePreviewBar, [hide]);
+        rememberPreviewBar(ctx.url, hide);
+        // Host access lets the bar stay hidden on reload. Requested before any await so Chrome keeps the click's gesture.
+        const kept = hide && await chrome.permissions.request({ origins: [originPattern(ctx.url)] }).catch(() => false);
+        ctx.previewBarHidden = await toggled;
         renderTools();
-        toast(ctx.previewBarHidden ? 'Preview bar hidden' : 'Preview bar shown');
+        toast(!hide ? 'Preview bar shown' : kept ? 'Preview bar hidden on every reload' : 'Preview bar hidden on this page only');
       }
     }),
     action({

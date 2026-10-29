@@ -83,6 +83,7 @@ Speeds up Shopify theme development by turning the store page you're viewing int
 | `offscreen` | Copies links to the clipboard when the user presses a keyboard shortcut. Chrome only allows a web page to write to the clipboard right after the user interacts with it, so the copy runs in a hidden extension page instead. |
 | `declarativeContent` | Shows the coloured toolbar icon only on pages that contain Shopify sections, without reading page content. |
 | Host permission (optional): `https://*.myshopify.com/*`, `https://admin.shopify.com/*` | Requested only when the user turns on "Theme access" in Settings. Lets the section inspector read the theme's JSON templates from the Shopify admin to show which section file renders each part of the page. No other hosts are accessed. |
+| Host permission (optional): `https://*/*`, one store at a time | Requested for a single store only when the user hides the Shopify preview bar from the popup, so it stays hidden on reload. The extension then injects a one-line stylesheet into that store's pages; nothing is read or sent. |
 
 **Remote code:** No, I am not using remote code. (All JavaScript is in the package; the QR library and icons are bundled.)
 

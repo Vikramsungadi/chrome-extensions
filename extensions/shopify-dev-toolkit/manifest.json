@@ -79,6 +79,7 @@
   },
   "optional_host_permissions": [
     "https://*.myshopify.com/*",
-    "https://admin.shopify.com/*"
+    "https://admin.shopify.com/*",
+    "https://*/*"
   ]
 }

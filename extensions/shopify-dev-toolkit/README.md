@@ -14,7 +14,7 @@ Rewrite of "Shortcuts for Shopify" (`okamfjilkpkpcdckebmcglnjpgolccmi`) — mark
 
 **Markets** — current country / language / currency / routes root; every market URL for the current page (from `hreflang`) with preview theme kept: open, copy, QR, copy all; country/language switcher via `/localization` (for markets sharing a domain); linked stores (separate regional stores) opening the same page.
 
-**Tools** — section inspector (resolves each section's real type from theme JSON via the Admin API — instance keys renamed in the editor and per-market `*.context.<market>.json` templates are handled; opens the section file or the template JSON at the right line in admin or VS Code / Cursor / Windsurf, focusing the window that has the repo; copy section ID; lock with `L`, `Esc` to exit), hide preview bar, copy debug info, cache-bust reload, QA scan (Liquid errors, missing translations, broken images, missing alt, duplicate IDs), product/collection/cart JSON, clear cart.
+**Tools** — section inspector (resolves each section's real type from theme JSON via the Admin API — instance keys renamed in the editor and per-market `*.context.<market>.json` templates are handled; opens the section file or the template JSON at the right line in admin or VS Code / Cursor / Windsurf, focusing the window that has the repo; copy section ID; lock with `L`, `Esc` to exit), hide preview bar (stays hidden on reload once you allow access to that store when the popup asks), copy debug info, cache-bust reload, QA scan (Liquid errors, missing translations, broken images, missing alt, duplicate IDs), product/collection/cart JSON, clear cart.
 
 ## Section types (theme access)
 The storefront only exposes a section's instance key (e.g. `hero_licensed`), not its type (`splide-slider`). To resolve it, turn on **Settings → Theme access** (an optional permission for `*.myshopify.com` and `admin.shopify.com`). The inspector then reads the theme's JSON through your signed-in admin session, or through a per-store Admin API token with `read_themes` if you add one. Without access, it shows the key as a *guess* and disables the file buttons.
@@ -66,6 +66,7 @@ src/lib/links.js         URL builders (preview, editor, admin, markets)
 src/lib/qr.js            QR → SVG / PNG
 src/lib/storage.js       synced settings
 src/lib/resolver.js      section key -> type lookup (Admin API, cached per session)
+src/lib/preview-bar.js   remembers stores with the preview bar hidden; registers src/hide-preview-bar.js for them
 src/popup/               popup (Polaris tokens + icons come from ../../shared, mounted at src/shared/ by build.sh)
 src/options/             settings: linked stores, repo paths, editor
 src/vendor/qrcode.js     qrcode-generator 1.4.4 (MIT, Kazuhiko Arase)
