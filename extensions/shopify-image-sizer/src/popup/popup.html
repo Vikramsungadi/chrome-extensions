@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Image Sizer for Shopify</title>
+  <link rel="stylesheet" href="../shared/polaris.css">
+  <link rel="stylesheet" href="../ui/captures.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body tabindex="-1">
+  <header class="topbar">
+    <span class="title">Image Sizer</span>
+    <span class="spacer"></span>
+    <span class="kbd-hint" id="shortcut"></span>
+  </header>
+
+  <main class="stack" style="--gap:12px">
+    <div class="card stack" style="--gap:8px">
+      <button class="btn primary lg block" id="toggle"><span data-icon="image"></span><span id="toggle-label">Inspect images</span></button>
+      <p class="subdued small" id="toggle-help">Hover an image, click to lock, then <b>＋</b> to save it with a reference name. Also in DevTools → Elements → <b>Image Size</b>.</p>
+    </div>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" data-scope="page" aria-selected="true">This page<span class="count" id="count-page"></span></button>
+      <button class="tab" role="tab" data-scope="all">All pages<span class="count" id="count-all"></span></button>
+    </nav>
+
+    <div id="groups" class="stack" style="--gap:12px"></div>
+
+    <div id="empty" class="card empty-state" hidden>
+      <span class="empty-icon" data-icon="image"></span>
+      <p class="heading-sm">No references yet</p>
+      <p class="subdued small">Saved images show here, ready to copy for the team.</p>
+    </div>
+
+    <footer class="card stack" style="--gap:8px" id="export">
+      <div class="btn-group">
+        <button class="btn" data-export="text" title="Plain text for Slack, Jira or chat"><span data-icon="copy"></span>Copy text</button>
+        <button class="btn" data-export="csv" title="Paste into Google Sheets / Excel"><span data-icon="data"></span>Copy CSV</button>
+        <button class="icon-btn" data-export="download" title="Download CSV" aria-label="Download CSV" data-icon="download"></button>
+      </div>
+      <button class="btn plain sm clear" id="clear">Clear these</button>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+body { width: 380px; min-height: 240px; }
+body:focus, body:focus-visible { outline: none; }
+
+.topbar { display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 12px 0 16px; background: #1a1a1a; color: #fff; }
+.topbar .title { font-weight: 650; font-size: 14px; }
+.topbar .spacer { flex: 1; }
+.topbar kbd.k { background: #303030; color: #b5b5b5; box-shadow: 0 0 0 1px #4a4a4a inset; }
+.kbd-hint { display: inline-flex; gap: 2px; }
+
+main { padding: 12px; }
+.tabs { padding: 0; }
+.count { display: inline-block; min-width: 18px; margin-left: 4px; padding: 0 5px; border-radius: 9999px; background: rgba(0,0,0,.08); font-size: 11px; line-height: 18px; text-align: center; }
+.count:empty { display: none; }
+
+#toggle .icon { width: 18px; height: 18px; }
+.clear { align-self: center; color: var(--p-critical-text) !important; }
+
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 24px 16px; text-align: center; }
+.empty-icon { color: var(--p-text-secondary); }
+.empty-icon .icon { width: 28px; height: 28px; }

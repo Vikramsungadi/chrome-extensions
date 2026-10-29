@@ -1,0 +1,22 @@
+/* Saved-reference list (popup + DevTools pane). */
+.group-head { display: flex; align-items: center; gap: 8px; padding: 10px 8px 6px 14px; border-bottom: 1px solid var(--p-border); }
+.group-head a { display: block; color: var(--p-text-secondary); }
+
+.capture { display: flex; flex-direction: column; gap: 4px; padding: 8px 10px 10px 14px; }
+.capture + .capture { border-top: 1px solid var(--p-border); }
+.capture-head { display: flex; align-items: center; gap: 4px; min-height: 28px; }
+.capture .name { all: unset; flex: 1; min-width: 0; font-weight: 650; cursor: text; border-radius: var(--p-radius-100); }
+.capture .name:hover { text-decoration: underline dotted; }
+.capture .field { flex: 1; min-width: 0; }
+.capture .row-actions { display: flex; gap: 2px; opacity: 0; transition: opacity .1s; }
+.capture:hover .row-actions, .capture .row-actions:focus-within { opacity: 1; }
+.capture .row-actions .icon { width: 18px; height: 18px; }
+
+.chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.chip {
+  all: unset; box-sizing: border-box; cursor: copy; display: flex; flex-direction: column; padding: 4px 8px;
+  border-radius: var(--p-radius-200); background: var(--p-surface-secondary); box-shadow: 0 0 0 1px var(--p-border) inset;
+}
+.chip:hover { background: var(--p-surface-active); }
+.chip span { font-size: 11px; line-height: 14px; font-weight: 550; color: var(--p-text-secondary); }
+.chip b { font: 650 12px/16px var(--p-mono); white-space: nowrap; }

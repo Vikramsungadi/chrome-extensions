@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Image Size</title>
+  <link rel="stylesheet" href="../shared/polaris.css">
+  <link rel="stylesheet" href="../ui/captures.css">
+  <link rel="stylesheet" href="pane.css">
+</head>
+<body>
+  <main class="stack" style="--gap:12px">
+    <div id="none" class="card subdued small">
+      Select an image in the Elements panel — an <code>&lt;img&gt;</code>, <code>&lt;picture&gt;</code>, inline SVG, or anything with a background image (wrappers work too).
+    </div>
+
+    <div id="selected" class="card stack" style="--gap:10px" hidden>
+      <div class="inline between">
+        <div class="grow">
+          <p class="heading-md truncate" id="title"></p>
+          <p class="subdued small truncate" id="file"></p>
+        </div>
+        <button class="icon-btn" id="refresh" title="Measure again (after resizing or changing device)" aria-label="Measure again" data-icon="refresh"></button>
+      </div>
+      <div class="chips" id="scales"></div>
+      <div class="inline" style="--gap:4px" id="meta"></div>
+      <form class="connected" id="save">
+        <input class="field sm" name="ref" placeholder="Reference name, e.g. Hero banner – mobile" autocomplete="off" maxlength="120" required>
+        <button class="btn primary sm" type="submit"><span data-icon="plus"></span>Add</button>
+      </form>
+    </div>
+
+    <div class="inline between" id="saved-head" hidden>
+      <p class="heading-sm">Saved on this page <span class="subdued" id="saved-count"></span></p>
+      <button class="btn sm" id="copy-page"><span data-icon="copy"></span>Copy</button>
+    </div>
+    <div id="groups" class="stack"></div>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="../measure.js"></script>
+  <script type="module" src="pane.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+body { background: var(--p-surface-secondary); }
+main { padding: 8px; }
+.card { padding: 12px; }
+code { font-family: var(--p-mono); font-size: 11px; }
+#save .field { flex: 1; min-width: 0; }
+#save .btn .icon { width: 16px; height: 16px; }
+.toast { bottom: 8px; }

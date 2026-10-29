@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Image Sizer for Shopify",
+  "short_name": "Image Sizer",
+  "version": "1.0.0",
+  "description": "Inspect any storefront image for its rendered size and 1x / 1.5x / 2x export sizes, name it and share the list with your team.",
+  "minimum_chrome_version": "116",
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "devtools_page": "src/devtools/devtools.html",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "commands": {
+    "_execute_action": {
+      "description": "Open the image sizer popup"
+    },
+    "toggle-inspector": {
+      "description": "Toggle image inspector",
+      "suggested_key": {
+        "default": "Alt+Shift+M",
+        "mac": "MacCtrl+Shift+M"
+      }
+    }
+  }
+}
