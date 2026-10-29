@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TabEase</title>
+  <link rel="stylesheet" href="../shared/polaris.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body tabindex="-1">
+  <header class="topbar">
+    <span class="title">TabEase</span>
+    <span class="spacer"></span>
+    <label class="switch" title="Merge new tabs into their slot">
+      <input type="checkbox" id="enabled">
+      <span class="track"></span>
+      <span id="enabled-label">On</span>
+    </label>
+  </header>
+
+  <main class="stack" style="--gap:12px">
+    <label class="search">
+      <span data-icon="search"></span>
+      <input id="filter" placeholder="Jump to… (vahro editor, redwolf admin)" autocomplete="off" autofocus>
+    </label>
+
+    <div class="banner critical inline between" id="dupes" hidden>
+      <span id="dupes-text"></span>
+      <button class="btn sm" id="close-dupes">Close duplicates</button>
+    </div>
+
+    <div id="stores" class="stack" style="--gap:12px"></div>
+
+    <div id="empty" class="card subdued small" hidden>
+      No Shopify tabs open. Open a store's preview, theme editor, code editor or admin; each gets one tab, and new links reuse it.
+    </div>
+
+    <div class="card stack" style="--gap:8px">
+      <p class="heading-sm">Tab groups</p>
+      <label class="checkbox"><input type="checkbox" data-setting="grouping"><span>Group tabs into Chrome tab groups</span></label>
+      <label class="checkbox"><input type="checkbox" data-setting="groupStores"><span>Give each Shopify store its own group</span></label>
+      <div id="rules" class="stack" style="--gap:8px"></div>
+      <div><button class="btn sm" id="add-rule" data-icon="plus">Add group</button></div>
+      <p class="help">Patterns match a store, domain or URL path, comma-separated. <b>*</b> is a wildcard: <code>redwolf*</code>, <code>tagmanager.google.com</code>. Rename or recolour a group in Chrome's tab strip and TabEase keeps it that way.</p>
+    </div>
+
+    <div class="card stack" style="--gap:8px">
+      <label class="checkbox"><input type="checkbox" data-setting="exact"><span>Also merge exact duplicate URLs on other sites</span></label>
+      <label class="checkbox"><input type="checkbox" data-setting="allWindows"><span>Reuse tabs from other windows</span></label>
+      <p class="help">Need two tabs anyway? Right-click a link → <b>Open link in new tab (keep separate)</b>.</p>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

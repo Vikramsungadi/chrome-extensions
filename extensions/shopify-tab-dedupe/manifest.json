@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "TabEase",
+  "short_name": "TabEase",
+  "version": "1.1.0",
+  "description": "One tab per store for preview, theme editor, code and admin, plus tab groups by store or your own URL rules.",
+  "minimum_chrome_version": "121",
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "tabs",
+    "webNavigation",
+    "storage",
+    "contextMenus",
+    "tabGroups"
+  ],
+  "commands": {
+    "_execute_action": {
+      "description": "Open the store switcher",
+      "suggested_key": {
+        "default": "Alt+Shift+T",
+        "mac": "MacCtrl+Shift+T"
+      }
+    },
+    "close-duplicates": {
+      "description": "Close all duplicate tabs"
+    }
+  }
+}
