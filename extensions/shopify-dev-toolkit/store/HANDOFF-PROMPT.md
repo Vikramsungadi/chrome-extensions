@@ -7,7 +7,7 @@ How to work:
 - Don't press "Submit for review". When everything is filled in, show me a summary of each tab and wait for my go-ahead.
 
 STEP 1: Click "New item" and ask me to upload:
-  dist/shopify-dev-toolkit-2.3.1.zip
+  dist/shopify-dev-toolkit-2.4.0.zip
 
 STEP 2: STORE LISTING tab
 Name: Theme Dev Toolkit for Shopify (comes from the zip)

@@ -18,5 +18,8 @@ Shopify dev tools as Manifest V3 Chrome extensions. Each extension has its own `
 - Settings that should follow the user go in `chrome.storage.sync` behind a `getSettings()` / `saveSettings()` pair with a `DEFAULT_SETTINGS` object and a shape comment at the top of the file; keep that comment current. Per-device data goes in `chrome.storage.local`; per-browser-session state in `chrome.storage.session` (service workers sleep, so module variables are not durable).
 - Service-worker listeners must be registered at top level, synchronously.
 - Each extension's README has a **Layout** block listing its files; update it when adding a file.
-- Bump `version` in `manifest.json` for user-visible changes. New permissions must be justified in that extension's store listing doc if it has one.
+- New permissions must be justified in that extension's store listing doc if it has one.
+
+## Releases
+Every new feature or fix ships as a GitHub release. To release, bump `version` in that extension's `manifest.json` (minor for a feature, patch for a fix) and push to `main`. [.github/workflows/release.yml](.github/workflows/release.yml) then builds the zip and creates the release `<folder>-v<version>` (e.g. `shopify-tab-dedupe-v1.2.0`). Its notes are the commit subjects touching that extension since its last release, so write commit subjects that read well as release notes. Don't create tags or releases by hand; a version whose tag already exists is skipped. After pushing, check the run with `gh run list -R Vikramsungadi/chrome-extensions`.
 - Commits go to `main` on `github.com/Vikramsungadi/chrome-extensions`, pushed as the **Vikramsungadi** account (gh's active account may be a different one).

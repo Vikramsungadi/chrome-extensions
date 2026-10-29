@@ -1,0 +1,43 @@
+# Publishes a GitHub release for every extension whose manifest version has no release yet.
+# Bumping "version" in extensions/<name>/manifest.json on main is what triggers a release:
+# tag <name>-v<version>, the Web Store zip attached, notes = commits since that extension's last release.
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths: ['extensions/*/manifest.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Release new versions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for manifest in extensions/*/manifest.json; do
+            name=$(basename "$(dirname "$manifest")")
+            version=$(jq -r .version "$manifest")
+            tag="$name-v$version"
+            if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then continue; fi
+
+            ./build.sh --zip "$name"
+            previous=$(git tag --list "$name-v*" --sort=-v:refname | head -1)
+            {
+              echo "## Changes"
+              git log --no-merges --format='- %s' ${previous:+$previous..}HEAD -- "extensions/$name" shared build.sh
+              echo
+              echo "Install: download the zip, unzip it, then chrome://extensions → Developer mode → Load unpacked → select the folder."
+            } > notes.md
+            gh release create "$tag" "dist/$name-$version.zip" \
+              --title "$(jq -r .name "$manifest") $version" --notes-file notes.md --target "$GITHUB_SHA"
+          done
